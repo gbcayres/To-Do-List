@@ -1,1 +1,1 @@
-# To do list with pure HTML, CSS and JavaScript
+# To do list with HTML, CSS and JavaScript

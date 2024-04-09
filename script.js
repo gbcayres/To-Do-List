@@ -4,6 +4,10 @@ const $todoList = document.querySelector('.todo-list');
 const $clearAllBtn = document.querySelector('.clear-all');
 const $clearCompleted = document.querySelector('.clear-completed');
 
+document.addEventListener('DOMContentLoaded', () => {
+    loadData();
+})
+
 $addBtn.addEventListener('click', addTask)
 
 $clearAllBtn.addEventListener('click', removeAll)
@@ -24,12 +28,14 @@ function addTask() {
         $todoList.appendChild(newTask)
         $input.value = '';
         $input.focus();
+        saveData();
     }
 }
 
 function toggleTask(e) {
     const task = e.target;
     task.classList.toggle('checked')
+    saveData();
 }
 
 function createTaskElement(taskText) {
@@ -52,15 +58,18 @@ function createCloseIcon() {
 function checkTodo(e) {
     const todo = e.target;
     todo.classList.toggle('checked');
+    saveData();
 }
 
 function removeTask(e) {
     const todo = e.target;
     todo.parentElement.remove()
+    saveData();
 }
 
 function removeAll() {
     $todoList.innerHTML = '';
+    saveData();
 }
 
 function removeCompleted() {
@@ -70,4 +79,25 @@ function removeCompleted() {
             todo.remove();
         }
     });
+    saveData();
+}
+
+function saveData() {
+   const todos = document.querySelectorAll('.todo-list li');
+   const todosData = Array.from(todos).map(todo => ({text: todo.textContent, completed: todo.classList.contains('checked')}))
+   localStorage.setItem('todos', JSON.stringify(todosData));
+}
+
+function loadData() {
+    const todosData = JSON.parse(localStorage.getItem('todos'));
+    if(todosData) {
+        todosData.forEach(todoData => {
+            const newTask = createTaskElement(todoData.text);
+            if (todoData.completed) {
+                newTask.classList.add("checked")
+            }
+
+            $todoList.appendChild(newTask)
+        })
+    }
 }

@@ -4,10 +4,6 @@ const $todoList = document.querySelector('.todo-list');
 const $clearAllBtn = document.querySelector('.clear-all');
 const $clearCompleted = document.querySelector('.clear-completed');
 
-document.addEventListener("DOMContentLoaded",  () => {
-    loadTodos();
-})
-
 $addBtn.addEventListener('click', addTask)
 
 $clearAllBtn.addEventListener('click', removeAll)
@@ -26,7 +22,6 @@ function addTask() {
     if(taskText) {
         const newTask =  createTaskElement(taskText)
         $todoList.appendChild(newTask)
-        saveTodos();
         $input.value = '';
         $input.focus();
     }
@@ -35,7 +30,6 @@ function addTask() {
 function toggleTask(e) {
     const task = e.target;
     task.classList.toggle('checked')
-    saveTodos();
 }
 
 function createTaskElement(taskText) {
@@ -63,12 +57,10 @@ function checkTodo(e) {
 function removeTask(e) {
     const todo = e.target;
     todo.parentElement.remove()
-    saveTodos();
 }
 
 function removeAll() {
     $todoList.innerHTML = '';
-    saveTodos();
 }
 
 function removeCompleted() {
@@ -77,23 +69,5 @@ function removeCompleted() {
         if (todo.classList.contains('checked')) {
             todo.remove();
         }
-    });
-    saveTodos();
-}
-
-function saveTodos() {
-    const todoList = $todoList;
-    localStorage.setItem('todos', todoList.innerHTML)
-}
-
-function loadTodos() {
-    const todosHTML = localStorage.getItem('todos') || '';
-    $todoList.innerHTML = todosHTML;
-
-    const todos = document.querySelectorAll('.todo-list li');
-    todos.forEach(todo => {
-        todo.addEventListener('click', toggleTask);
-        const closeIcon = todo.querySelector('.close-icon');
-        closeIcon.addEventListener('click', removeTask);
     });
 }

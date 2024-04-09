@@ -35,6 +35,7 @@ function addTask() {
 function toggleTask(e) {
     const task = e.target;
     task.classList.toggle('checked')
+    saveTodos();
 }
 
 function createTaskElement(taskText) {
@@ -77,6 +78,7 @@ function removeCompleted() {
             todo.remove();
         }
     });
+    saveTodos();
 }
 
 function saveTodos() {
@@ -85,5 +87,13 @@ function saveTodos() {
 }
 
 function loadTodos() {
-    $todoList.innerHTML = localStorage.getItem('todos') || '';
+    const todosHTML = localStorage.getItem('todos') || '';
+    $todoList.innerHTML = todosHTML;
+
+    const todos = document.querySelectorAll('.todo-list li');
+    todos.forEach(todo => {
+        todo.addEventListener('click', toggleTask);
+        const closeIcon = todo.querySelector('.close-icon');
+        closeIcon.addEventListener('click', removeTask);
+    });
 }
